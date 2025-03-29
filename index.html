@@ -32,13 +32,13 @@
   <button onclick="testBeep()">🔊 Test Beep Sesi</button>
 
   <audio id="beep" preload="auto">
-    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=" type="audio/wav" />
+    <source src="https://www.soundjay.com/button/beep-07.mp3" type="audio/mp3" />
     Tarayıcınız ses etiketini desteklemiyor.
   </audio>
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(reg => {
+      navigator.serviceWorker.register('sw.js').then(function(reg) {
         console.log('Service Worker Registered', reg);
       });
     }
@@ -48,6 +48,8 @@
     const beepSound = document.getElementById("beep");
 
     function testBeep() {
+      beepSound.pause();
+      beepSound.currentTime = 0;
       beepSound.play();
     }
 
@@ -65,7 +67,7 @@
 
     function handleScan(barcode) {
       html5QrCode.pause();
-      beepSound.play();
+      testBeep();
       currentCode = barcode;
       document.getElementById("currentBarcode").textContent = barcode;
       document.getElementById("manualInput").style.display = "block";
@@ -97,7 +99,7 @@
     }
 
     function exportToExcel() {
-      const data = Object.keys(scannedData).map(code => { return { Barkod: code, Adet: scannedData[code] }; });
+      const data = Object.keys(scannedData).map(code => ({ Barkod: code, Adet: scannedData[code] }));
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Sayim");
