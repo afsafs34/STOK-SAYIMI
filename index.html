@@ -56,7 +56,7 @@
       if (devices.length) {
         html5QrCode.start(
           { facingMode: "environment" },
-          { fps: 20, qrbox: { width: 280, height: 120 } },
+          { fps: 30, aspectRatio: 1.5, disableFlip: true },
           barcode => handleScan(barcode),
           error => {}
         );
