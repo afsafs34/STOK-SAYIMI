@@ -67,7 +67,7 @@
 
     function handleScan(barcode) {
       html5QrCode.pause();
-      testBeep();
+      testBeep(); if (navigator.vibrate) navigator.vibrate(200);
       currentCode = barcode;
       document.getElementById("currentBarcode").textContent = barcode;
       document.getElementById("manualInput").style.display = "block";
