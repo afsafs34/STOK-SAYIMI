@@ -1,1 +1,102 @@
 
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barkod Sayım Uygulaması</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    #reader { width: 100%; max-width: 400px; margin: auto; }
+    input, button { padding: 10px; margin: 10px; font-size: 16px; }
+    table { width: 100%; max-width: 500px; margin: 20px auto; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📦 Barkod Sayım Uygulaması</h1>
+  <div id="reader"></div>
+  <div id="manualInput" style="display: none;">
+    <p>Barkod: <span id="currentBarcode"></span></p>
+    <input type="number" id="quantityInput" placeholder="Adet giriniz">
+    <button onclick="addQuantity()">➕ Ekle</button>
+  </div>
+  <h2>📋 Sayım Listesi</h2>
+  <table>
+    <thead><tr><th>Barkod</th><th>Adet</th></tr></thead>
+    <tbody id="itemList"></tbody>
+  </table>
+  <button onclick="exportToExcel()">📥 Excel'e Aktar</button>
+  <button onclick="testBeep()">🔊 Test Beep Sesi</button>
+
+  <audio id="beep">
+    <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+    Tarayıcınız ses etiketini desteklemiyor.
+  </audio>
+
+  <script>
+    let scannedData = {};
+    let currentCode = "";
+    const beepSound = document.getElementById("beep");
+
+    function testBeep() {
+      beepSound.play();
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices.length) {
+        html5QrCode.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: 250 },
+          barcode => handleScan(barcode),
+          error => {}
+        );
+      }
+    });
+
+    function handleScan(barcode) {
+      html5QrCode.pause();
+      beepSound.play();
+      currentCode = barcode;
+      document.getElementById("currentBarcode").textContent = barcode;
+      document.getElementById("manualInput").style.display = "block";
+    }
+
+    function addQuantity() {
+      const qty = parseInt(document.getElementById("quantityInput").value);
+      if (!qty || qty < 1) return alert("Lütfen geçerli bir sayı girin");
+
+      if (scannedData[currentCode]) {
+        scannedData[currentCode] += qty;
+      } else {
+        scannedData[currentCode] = qty;
+      }
+
+      updateTable();
+      document.getElementById("quantityInput").value = "";
+      document.getElementById("manualInput").style.display = "none";
+      html5QrCode.resume();
+    }
+
+    function updateTable() {
+      const tbody = document.getElementById("itemList");
+      tbody.innerHTML = "";
+      for (const code in scannedData) {
+        const row = `<tr><td>${code}</td><td>${scannedData[code]}</td></tr>`;
+        tbody.innerHTML += row;
+      }
+    }
+
+    function exportToExcel() {
+      const data = Object.keys(scannedData).map(code => ({ Barkod: code, Adet: scannedData[code] }));
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sayim");
+      XLSX.writeFile(workbook, "sayim_listesi.xlsx");
+    }
+  </script>
+</body>
+</html>
