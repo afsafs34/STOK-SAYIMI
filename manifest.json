@@ -1,0 +1,16 @@
+{
+  "name": "Barkod Sayım Uygulaması",
+  "short_name": "Sayım",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "iPhone destekli barkod sayım uygulaması",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/4290/4290854.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff"
+}
