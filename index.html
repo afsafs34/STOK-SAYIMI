@@ -13,7 +13,17 @@
     input, button { padding: 10px; margin: 10px; font-size: 16px; }
     table { width: 100%; max-width: 500px; margin: 20px auto; border-collapse: collapse; }
     th, td { border: 1px solid #ccc; padding: 10px; }
-  </style>
+  
+    .flash {
+      animation: flash-bg 0.5s ease-in-out;
+    }
+
+    @keyframes flash-bg {
+      0% { background-color: #d4edda; }
+      100% { background-color: white; }
+    }
+    </style>
+    
 </head>
 <body>
   <h1>📦 Barkod Sayım Uygulaması</h1>
@@ -70,7 +80,7 @@
       testBeep(); if (navigator.vibrate) navigator.vibrate(200);
       currentCode = barcode;
       document.getElementById("currentBarcode").textContent = barcode;
-      document.getElementById("manualInput").style.display = "block";
+      document.body.classList.add("flash"); setTimeout(() => document.body.classList.remove("flash"), 500); document.getElementById("manualInput").style.display = "block";
     }
 
     function addQuantity() {
