@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Barkod Sayım Uygulaması</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json" />
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
@@ -20,7 +20,7 @@
   <div id="reader"></div>
   <div id="manualInput" style="display: none;">
     <p>Barkod: <span id="currentBarcode"></span></p>
-    <input type="number" id="quantityInput" placeholder="Adet giriniz">
+    <input type="number" id="quantityInput" placeholder="Adet giriniz" />
     <button onclick="addQuantity()">➕ Ekle</button>
   </div>
   <h2>📋 Sayım Listesi</h2>
@@ -31,14 +31,14 @@
   <button onclick="exportToExcel()">📥 Excel'e Aktar</button>
   <button onclick="testBeep()">🔊 Test Beep Sesi</button>
 
-  <audio id="beep">
-    <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+  <audio id="beep" preload="auto">
+    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=" type="audio/wav" />
     Tarayıcınız ses etiketini desteklemiyor.
   </audio>
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(function(reg) {
+      navigator.serviceWorker.register('sw.js').then(reg => {
         console.log('Service Worker Registered', reg);
       });
     }
@@ -56,7 +56,7 @@
       if (devices.length) {
         html5QrCode.start(
           { facingMode: "environment" },
-          { fps: 25, qrbox: { width: 350, height: 250 } },
+          { fps: 20, qrbox: { width: 280, height: 120 } },
           barcode => handleScan(barcode),
           error => {}
         );
@@ -97,7 +97,7 @@
     }
 
     function exportToExcel() {
-      const data = Object.keys(scannedData).map(code => ({ Barkod: code, Adet: scannedData[code] }));
+      const data = Object.keys(scannedData).map(code => { return { Barkod: code, Adet: scannedData[code] }; });
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Sayim");
