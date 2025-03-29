@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>🔊 Ses Testi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    button { font-size: 20px; padding: 15px 30px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <h1>🔊 Ses Testi</h1>
+  <p>Bu test, cihazında ses çıkışının çalışıp çalışmadığını anlamak için tasarlanmıştır.</p>
+  <button onclick="playSound()">🔈 Sesi Çal</button>
+
+  <audio id="beep" preload="auto">
+    <source src="https://www.soundjay.com/button/beep-07.mp3" type="audio/mp3">
+    Tarayıcınız ses etiketini desteklemiyor.
+  </audio>
+
+  <script>
+    function playSound() {
+      const sound = document.getElementById('beep');
+      sound.pause();
+      sound.currentTime = 0;
+      sound.play().then(() => {
+        alert('✅ Ses çaldıysa cihazınız destekliyor demektir.');
+      }).catch(e => {
+        alert('❌ Ses çalmadı. Cihaz sessizde olabilir veya tarayıcı engelliyor olabilir.');
+        console.error(e);
+      });
+    }
+  </script>
+</body>
+</html>
